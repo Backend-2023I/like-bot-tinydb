@@ -10,7 +10,14 @@ class LikeDB:
         """
         Add student in Database
         """
-        pass
+        if not self.db.contains(doc_id=user_id):
+            data = {
+                "like": 0,
+                "dislike": 0
+            }
+            document = Document(data, doc_id=user_id)
+            self.db.insert(document)
+
     
     def all_likes(self):
         """
