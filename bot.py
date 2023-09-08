@@ -8,7 +8,11 @@ db = LikeDB("data.json")
 TOKEN ='5892121487:AAFJ8hXhSsCFBNMp-hHqFtAfwhO8RtCxdrM'
 
 def start(update: Update, context: CallbackContext):
-    pass
+    chat_id = update.message.chat.id
+    db.add_student(chat_id)
+    bot = context.bot
+
+    bot.sendMessage(chat_id, "Welcome!")
 
 def main(update: Update, context: CallbackContext):
     pass
