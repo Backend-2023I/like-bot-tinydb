@@ -23,13 +23,29 @@ class LikeDB:
         """
         Count all users likes
         """
-        pass
+        data = self.db.all()
+
+        likes = 0
+        for i in data:
+            likes += i['like']
+        
+        return likes
+
+        return data
 
     def all_dislikes(self):
         """
         Count all users dislikes
         """
-        pass
+        data = self.db.all()
+
+        dislikes = 0
+        for i in data:
+            dislikes += i['dislike']
+        
+        return dislikes
+
+        return data
 
     def add_like(self, user_id:int):
         """
@@ -40,7 +56,21 @@ class LikeDB:
         Returns:
             The number of likes and dislikes for the post
         """
-        pass
+        
+        user = self.db.get(doc_id=user_id)
+        like = user['like']
+        dislike = user['dislike']
+
+        if like == 0 and dislike == 0:
+            user['like'] = 1
+        elif like == 1 and dislike == 0:
+            user['like'] = 0
+        elif like == 0 and dislike == 1:
+            user['like'] = 1
+            user['dislike'] = 0
+        
+        self.db.update(user, doc_ids=[user_id])
+        return user
 
 
 
@@ -53,4 +83,17 @@ class LikeDB:
         Returns:
             The number of likes and dislikes for the post
         """
-        pass
+        user = self.db.get(doc_id=user_id)
+        like = user['like']
+        dislike = user['dislike']
+
+        if like == 0 and dislike == 0:
+            user['dislike'] = 1
+        elif like == 0 and dislike == 1:
+            user['dislike'] = 0
+        elif like == 1 and dislike == 0:
+            user['like'] = 0
+            user['dislike'] = 1
+        
+        self.db.update(user, doc_ids=[user_id])
+        return user 
