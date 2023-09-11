@@ -12,10 +12,11 @@ def start(update: Update, context: CallbackContext):
     db.add_student(chat_id)
     bot = context.bot
 
-    bot.sendMessage(chat_id, "Welcome!")
+    bot.sendMessage(chat_id, "You send me photo!")
 
 def photo(update: Update, context: CallbackContext):
 
+    print(update.message.message_id)
     bot = context.bot
     chat_id = update.message.chat.id
 
@@ -30,7 +31,10 @@ def photo(update: Update, context: CallbackContext):
     bot.sendPhoto(chat_id, photo, reply_markup=keyboard)
 
 def main(update: Update, context: CallbackContext):
+
+
     query = update.callback_query
+    print(query.message.message_id)
     data = query.data
 
     chat_id = query.message.chat.id
