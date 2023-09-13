@@ -9,19 +9,22 @@ TOKEN ='5892121487:AAFJ8hXhSsCFBNMp-hHqFtAfwhO8RtCxdrM'
 
 def start(update: Update, context: CallbackContext):
     chat_id = update.message.chat.id
-    db.add_student(chat_id)
+
     bot = context.bot
 
     bot.sendMessage(chat_id, "You send me photo!")
 
 def photo(update: Update, context: CallbackContext):
 
-    print(update.message.message_id)
+    message_id = update.message.message_id + 1
+    
     bot = context.bot
     chat_id = update.message.chat.id
 
-    likes = db.all_likes()
-    dislikes = db.all_dislikes()
+    db.add_user(chat_id, message_id)
+
+    likes = db.all_likes(message_id)
+    dislikes = db.all_dislikes(message_id)
 
     like = InlineKeyboardButton(text=f'👍 {likes}', callback_data='like')
     dislike = InlineKeyboardButton(text=f'👎 {dislikes}', callback_data='dislike')
@@ -34,18 +37,19 @@ def main(update: Update, context: CallbackContext):
 
 
     query = update.callback_query
-    print(query.message.message_id)
+    message_id = query.message.message_id
     data = query.data
 
+    query.answer('ok')
     chat_id = query.message.chat.id
 
     if data == 'like':
-        db.add_like(chat_id)
+        db.add_like(chat_id, message_id)
     if data == "dislike":
-        db.add_dislike(chat_id)
+        db.add_dislike(chat_id, message_id)
 
-    likes = db.all_likes()
-    dislikes = db.all_dislikes()
+    likes = db.all_likes(message_id)
+    dislikes = db.all_dislikes(message_id)
 
     like = InlineKeyboardButton(text=f'👍 {likes}', callback_data='like')
     dislike = InlineKeyboardButton(text=f'👎 {dislikes}', callback_data='dislike')
