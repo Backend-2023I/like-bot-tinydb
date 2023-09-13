@@ -6,24 +6,27 @@ class LikeDB:
         # Initialize the database
         self.db = TinyDB(file_path, indent=4)
 
-    def add_student(self, user_id):
+    def add_user(self, user_id, message_id):
         """
-        Add student in Database
+        Add user in Database
         """
-        if not self.db.contains(doc_id=user_id):
+        img = self.db.table(message_id)
+
+        if not img.contains(doc_id=user_id):
             data = {
                 "like": 0,
                 "dislike": 0
             }
             document = Document(data, doc_id=user_id)
-            self.db.insert(document)
+            img.insert(document)
 
     
-    def all_likes(self):
+    def all_likes(self, message_id):
         """
         Count all users likes
         """
-        data = self.db.all()
+        img = self.db.table(str(message_id))
+        data = img.all()
 
         likes = 0
         for i in data:
@@ -31,13 +34,12 @@ class LikeDB:
         
         return likes
 
-        return data
-
-    def all_dislikes(self):
+    def all_dislikes(self, message_id):
         """
         Count all users dislikes
         """
-        data = self.db.all()
+        img = self.db.table(str(message_id))
+        data = img.all()
 
         dislikes = 0
         for i in data:
@@ -47,7 +49,7 @@ class LikeDB:
 
         return data
 
-    def add_like(self, user_id:int):
+    def add_like(self, user_id:int, message_id):
         """
         Add like to the database
         
@@ -56,8 +58,9 @@ class LikeDB:
         Returns:
             The number of likes and dislikes for the post
         """
-        
-        user = self.db.get(doc_id=user_id)
+        img = self.db.table(str(message_id))
+
+        user =img.get(doc_id=user_id)
         like = user['like']
         dislike = user['dislike']
 
@@ -69,12 +72,12 @@ class LikeDB:
             user['like'] = 1
             user['dislike'] = 0
         
-        self.db.update(user, doc_ids=[user_id])
+        img.update(user, doc_ids=[user_id])
         return user
 
 
 
-    def add_dislike(self, user_id:int):
+    def add_dislike(self, user_id:int, message_id):
         """
         Add dislike to the database
         
@@ -83,7 +86,9 @@ class LikeDB:
         Returns:
             The number of likes and dislikes for the post
         """
-        user = self.db.get(doc_id=user_id)
+        img = self.db.table(str(message_id))
+
+        user = img.get(doc_id=user_id)
         like = user['like']
         dislike = user['dislike']
 
@@ -95,5 +100,5 @@ class LikeDB:
             user['like'] = 0
             user['dislike'] = 1
         
-        self.db.update(user, doc_ids=[user_id])
+        img.update(user, doc_ids=[user_id])
         return user 
